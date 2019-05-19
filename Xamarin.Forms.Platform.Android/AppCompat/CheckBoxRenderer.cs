@@ -35,24 +35,6 @@ namespace Xamarin.Forms.Platform.Android
 		public event EventHandler<VisualElementChangedEventArgs> ElementChanged;
 		public event EventHandler<PropertyChangedEventArgs> ElementPropertyChanged;
 
-		void IVisualElementRenderer.UpdateLayout() => _tracker?.UpdateLayout();
-		VisualElement IVisualElementRenderer.Element => CheckBox;
-		AView IVisualElementRenderer.View => this;
-		ViewGroup IVisualElementRenderer.ViewGroup => null;
-		VisualElementTracker IVisualElementRenderer.Tracker => _tracker;
-
-		CheckBox CheckBox
-		{
-			get => _checkBox;
-			set
-			{
-				_checkBox = value;
-				_platformElementConfiguration = null;
-			}
-		}
-
-
-		AppCompatCheckBox Control => this;
 		public CheckBoxRenderer(Context context) : base(context)
 		{
 			// These set the defaults so visually it matches up with other platforms
@@ -76,16 +58,16 @@ namespace Xamarin.Forms.Platform.Android
 				_tracker = null;
 
 
-				if (CheckBox != null)
+				if (Element != null)
 				{
-					CheckBox.PropertyChanged -= OnElementPropertyChanged;
+					Element.PropertyChanged -= OnElementPropertyChanged;
 
-					if (Android.Platform.GetRenderer(CheckBox) == this)
+					if (Android.Platform.GetRenderer(Element) == this)
 					{
-						CheckBox.ClearValue(Android.Platform.RendererProperty);
+						Element.ClearValue(Android.Platform.RendererProperty);
 					}
 
-					CheckBox = null;
+					Element = null;
 				}
 			}
 
@@ -131,8 +113,8 @@ namespace Xamarin.Forms.Platform.Android
 				throw new ArgumentException("Element is not of type " + typeof(CheckBox), nameof(element));
 			}
 
-			CheckBox oldElement = CheckBox;
-			CheckBox = checkBox;
+			CheckBox oldElement = Element;
+			Element = checkBox;
 
 			Performance.Start(out string reference);
 
@@ -158,9 +140,10 @@ namespace Xamarin.Forms.Platform.Android
 			this.EnsureId();
 						
 			UpdateOnColor();
+			UpdateIsChecked();
 
-			ElementChanged?.Invoke(this, new VisualElementChangedEventArgs(oldElement, CheckBox));
-			CheckBox?.SendViewInitialized(Control);
+			ElementChanged?.Invoke(this, new VisualElementChangedEventArgs(oldElement, Element));
+			Element?.SendViewInitialized(Control);
 		}
 
 		// CheckBox related
@@ -170,19 +153,31 @@ namespace Xamarin.Forms.Platform.Android
 			{
 				UpdateOnColor();
 			}
+			else if(e.PropertyName == CheckBox.IsCheckedProperty.PropertyName)
+			{
+				UpdateIsChecked();
+			}
 
 			ElementPropertyChanged?.Invoke(this, e);
 		}
 
 		void IOnCheckedChangeListener.OnCheckedChanged(CompoundButton buttonView, bool isChecked)
 		{
-			((IElementController)CheckBox).SetValueFromRenderer(CheckBox.IsCheckedProperty, isChecked);
+			((IElementController)Element).SetValueFromRenderer(CheckBox.IsCheckedProperty, isChecked);
+		}
+
+		void UpdateIsChecked()
+		{
+			if (Element == null || Control == null)
+				return;
+
+			Checked = Element.IsChecked;
 		}
 
 		void UpdateOnColor()
 		{		
 
-			if (CheckBox == null || Control == null)
+			if (Element == null || Control == null)
 				return;
 
 
@@ -192,7 +187,7 @@ namespace Xamarin.Forms.Platform.Android
 			var stateEnabled = AAttribute.StateEnabled;
 			var statePressed = AAttribute.StatePressed;
 
-			var tintColor = CheckBox.TintColor == Color.Default ? Color.Accent.ToAndroid() : CheckBox.TintColor.ToAndroid();
+			var tintColor = Element.TintColor == Color.Default ? Color.Accent.ToAndroid() : Element.TintColor.ToAndroid();
 
 			var list = new ColorStateList(
 					new int[][] 
@@ -233,7 +228,7 @@ namespace Xamarin.Forms.Platform.Android
 		// general state related
 		void IOnFocusChangeListener.OnFocusChange(AView v, bool hasFocus)
 		{
-			((IElementController)CheckBox).SetValueFromRenderer(VisualElement.IsFocusedPropertyKey, hasFocus);
+			((IElementController)Element).SetValueFromRenderer(VisualElement.IsFocusedPropertyKey, hasFocus);
 		}
 		// general state related
 
@@ -242,7 +237,7 @@ namespace Xamarin.Forms.Platform.Android
 		IPlatformElementConfiguration<PlatformConfiguration.Android, CheckBox> OnThisPlatform()
 		{
 			if (_platformElementConfiguration == null)
-				_platformElementConfiguration = CheckBox.OnThisPlatform();
+				_platformElementConfiguration = Element.OnThisPlatform();
 
 			return _platformElementConfiguration;
 		}
@@ -254,5 +249,25 @@ namespace Xamarin.Forms.Platform.Android
 
 			LabelFor = (int)(id ?? _defaultLabelFor);
 		}
+
+
+
+		void IVisualElementRenderer.UpdateLayout() => _tracker?.UpdateLayout();
+		VisualElement IVisualElementRenderer.Element => Element;
+		AView IVisualElementRenderer.View => this;
+		ViewGroup IVisualElementRenderer.ViewGroup => null;
+		VisualElementTracker IVisualElementRenderer.Tracker => _tracker;
+
+		protected CheckBox Element
+		{
+			get => _checkBox;
+			private set
+			{
+				_checkBox = value;
+				_platformElementConfiguration = null;
+			}
+		}
+
+		protected AppCompatCheckBox Control => this;
 	}
 }

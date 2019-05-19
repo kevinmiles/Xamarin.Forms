@@ -96,8 +96,6 @@
     <Compile Include="CollectionView\StartSnapHelper.cs" />
     <Compile Include="CollectionView\TemplatedItemViewHolder.cs" />
     <Compile Include="CollectionView\TextViewHolder.cs" />
-    <Compile Include="Cells\CheckBoxCellRenderer.cs" />
-    <Compile Include="Cells\CheckBoxCellView.cs" />
     <Compile Include="Elevation.cs" />
     <Compile Include="Extensions\EntryRendererExtensions.cs" />
     <Compile Include="Extensions\FragmentManagerExtensions.cs" />
@@ -241,7 +239,6 @@
     <Compile Include="Renderers\ShellToolbarTracker.cs" />
     <Compile Include="Renderers\ShellSectionRenderer.cs" />
     <Compile Include="Renderers\StreamImagesourceHandler.cs" />
-    <Compile Include="Renderers\CheckBoxRenderer.cs" />
     <Compile Include="Renderers\ViewCellExtensions.cs" />
     <Compile Include="Renderers\ViewGroupExtensions.cs" />
     <AndroidResource Include="Resources\Layout\RootLayout.axml" />
