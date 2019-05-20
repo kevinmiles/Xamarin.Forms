@@ -27,7 +27,7 @@ steps:
           **/bin/$(BuildConfiguration)/Xamarin.Forms.Pages.UnitTests.dll
           **/bin/$(BuildConfiguration)/**/Xamarin.Forms.Xaml.UnitTests.dll
         searchFolder: '$(Build.SourcesDirectory)'
-        pathtoCustomTestAdapters: '**/NUnitTestAdapter.*/tools/'
+        pathtoCustomTestAdapters: 'packages/NUnitTestAdapter.*/tools/'
         codeCoverageEnabled: true
         testRunTitle: '$(BuildConfiguration)_UnitTests'
         configuration: '$(BuildConfiguration)'
