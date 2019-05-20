@@ -23,6 +23,8 @@ variables:
   value: 10.2
 - name: provisioning
   value: false
+- name: NUGET_VERSION
+  value: 5.0.2
 
 resources:
   repositories:
@@ -69,6 +71,8 @@ jobs:
       release:
         BuildConfiguration: 'Release'
         BuildPlatform: $(DefaultBuildPlatform)
+  variables:
+    nugetVersion: $(NUGET_VERSION)
   steps:
      - template: build/steps/build-windows.yml
 
@@ -135,7 +139,7 @@ jobs:
     provisionator.signPath : 'build/provisioning/provisioning_sign.csx'
     buildConfiguration: $(DefaultBuildConfiguration)
     slnPath: $(SolutionFile)
-    nugetVersion: 4.8.1
+    nugetVersion: $(NUGET_VERSION)
     iOSCertSecureFileName: 'Xamarin Forms iOS Certificate.p12'
     iOSProvisioningSecureFileName: 'Xamarin Forms iOS Provisioning.mobileprovision'
   steps:
