@@ -16,7 +16,7 @@ steps:
         solution: $(SolutionFile)
         platform: '$(BuildPlatform)'
         configuration: '$(BuildConfiguration)'
-        msbuildArguments: '/nowarn:VSX1000 /p:CreateAllAndroidTargets=true /bl'
+        msbuildArguments: '/nowarn:VSX1000 /p:CreateAllAndroidTargets=true /bl:$(Build.ArtifactStagingDirectory)\win.binlog'
         clean: true
 
     - task: CopyFiles@2
