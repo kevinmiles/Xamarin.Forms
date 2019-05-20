@@ -6,7 +6,17 @@ namespace Xamarin.Forms.Platform.UWP
 {
 	public class CheckBoxRenderer : ViewRenderer<CheckBox, FormsCheckBox>
 	{
-		Brush _tintDefaultBrush = Color.Blue.ToBrush();
+		static Brush _tintDefaultBrush = Color.Blue.ToBrush();
+		bool _isDisposed = false;
+
+
+		protected virtual FormsCheckBox CreateNativeControl()
+		{
+			return new FormsCheckBox()
+			{
+				Style = Windows.UI.Xaml.Application.Current.Resources["FormsCheckBoxStyle"] as Windows.UI.Xaml.Style
+			};
+		}
 
 		protected override void OnElementChanged(ElementChangedEventArgs<CheckBox> e)
 		{
@@ -16,22 +26,29 @@ namespace Xamarin.Forms.Platform.UWP
 			{
 				if (Control == null)
 				{
-					var control = new FormsCheckBox() {
-						Style = Windows.UI.Xaml.Application.Current.Resources["FormsCheckBoxStyle"] as Windows.UI.Xaml.Style
-					   };
-
+					var control = CreateNativeControl();
 					control.Checked += OnNativeChecked;
 					control.Unchecked += OnNativeChecked;
-					//control.ClearValue(WindowsCheckbox.IsCheckedProperty);
 
 					SetNativeControl(control);
 				}
 
-				Control.IsChecked = Element.IsChecked;
-				
+				UpdateIsChecked();
 				UpdateFlowDirection();
 				UpdateTintColor();
 			}
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
+			if (_isDisposed)
+				return;
+
+			_isDisposed = true;
+
+			Control.Checked -= OnNativeChecked;
+			Control.Unchecked -= OnNativeChecked;
 		}
 
 		protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -40,7 +57,7 @@ namespace Xamarin.Forms.Platform.UWP
 
 			if (e.PropertyName == CheckBox.IsCheckedProperty.PropertyName)
 			{
-				Control.IsChecked = Element.IsChecked;
+				UpdateIsChecked();
 			}
 			else if (e.PropertyName == VisualElement.FlowDirectionProperty.PropertyName)
 			{
@@ -62,6 +79,12 @@ namespace Xamarin.Forms.Platform.UWP
 		void UpdateFlowDirection()
 		{
 			Control.UpdateFlowDirection(Element);
+		}
+
+
+		void UpdateIsChecked()
+		{
+			Control.IsChecked = Element.IsChecked;
 		}
 
 		void UpdateTintColor()
