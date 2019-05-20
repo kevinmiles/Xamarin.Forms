@@ -44,9 +44,10 @@ trigger:
     - README.md
 
 pr:
-- master
-- 3.*
-- 4.*
+  autoCancel: true
+  branches:
+    include:
+    - '*'
 
 jobs:
 - job: Phase_1
@@ -76,19 +77,19 @@ jobs:
   steps:
      - template: build/steps/build-windows.yml
 
-- job: Phase_3
-  displayName: Test Windows Phase
-  dependsOn: Phase_2
-  condition: succeeded()
-  pool:
-    name: $(winVmImage)
-    demands: vstest
-  strategy:
-    matrix:
-      debug:
-        BuildConfiguration: $(DefaultBuildConfiguration)
-      release:
-        BuildConfiguration: 'Release'
+# - job: Phase_3
+#   displayName: Test Windows Phase
+#   dependsOn: Phase_2
+#   condition: succeeded()
+#   pool:
+#     name: $(winVmImage)
+#     demands: vstest
+#   strategy:
+#     matrix:
+#       debug:
+#         BuildConfiguration: $(DefaultBuildConfiguration)
+#       release:
+#         BuildConfiguration: 'Release'
   steps:
      - template: build/steps/build-windows-test.yml
 
