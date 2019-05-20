@@ -26,8 +26,8 @@ steps:
           **/bin/$(BuildConfiguration)/Xamarin.Forms.Core.UnitTests.dll
           **/bin/$(BuildConfiguration)/Xamarin.Forms.Pages.UnitTests.dll
           **/bin/$(BuildConfiguration)/**/Xamarin.Forms.Xaml.UnitTests.dll
-        searchFolder: '$(Build.BinariesDirectory)'
-        pathtoCustomTestAdapters: '$(Build.BinariesDirectory)/testadapters/'
+        searchFolder: '$(Build.SourcesDirectory)'
+        pathtoCustomTestAdapters: '**/NUnitTestAdapter.*/tools/'
         codeCoverageEnabled: true
         testRunTitle: '$(BuildConfiguration)_UnitTests'
         configuration: '$(BuildConfiguration)'
@@ -124,16 +124,6 @@ steps:
           **/*.binlog
 
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-    - task: CopyFiles@2
-      displayName: 'Copy files test adapter'
-      inputs:
-        Contents: '**/NUnitTestAdapter.*/tools/*.dll'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/testadapter'
-        CleanTargetFolder: true
-        OverWrite: true
-        flattenFolders: true
-
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: win_build'
