@@ -152,7 +152,7 @@
     <Compile Include="PageExtensions.cs" />
     <Compile Include="Renderers\IAccessibilityElementsController.cs" />
     <Compile Include="Renderers\PageContainer.cs" />
-    <Compile Include="Renderers\CheckBoxRenderer.cs" />
+    <Compile Include="Renderers\CheckBoxRendererBase.cs" />
     <Compile Include="Renderers\WkWebViewRenderer.cs" />
     <Compile Include="Renderers\ElementSelectedEventArgs.cs" />
     <Compile Include="Renderers\IShellContext.cs" />
@@ -212,6 +212,7 @@
     <Compile Include="Renderers\ButtonLayoutManager.cs" />
     <Compile Include="Renderers\IButtonLayoutRenderer.cs" />
     <Compile Include="Renderers\SearchHandlerAppearanceTracker.cs" />
+    <Compile Include="Renderers\CheckBoxRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\StringResources.ar.resx" />

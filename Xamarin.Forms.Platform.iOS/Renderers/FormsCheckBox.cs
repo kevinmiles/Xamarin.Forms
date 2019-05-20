@@ -6,6 +6,8 @@ namespace Xamarin.Forms.Platform.iOS
 {
 	public class FormsCheckBox : UIControl
 	{
+		public virtual float DefaultSize => 30.0f;
+
 		Color _checkColor, _tintColor;
 		bool _isChecked;
 		bool _isEnabled;
@@ -38,7 +40,7 @@ namespace Xamarin.Forms.Platform.iOS
 					return;
 
 				_isEnabled = value;
-				
+
 				UserInteractionEnabled = IsEnabled;
 
 				SetNeedsDisplay();
@@ -71,24 +73,19 @@ namespace Xamarin.Forms.Platform.iOS
 			}
 		}
 
+		protected virtual UIBezierPath GetCheckBoxPath(CGRect backgroundRect) => UIBezierPath.FromOval(backgroundRect);
+
 		public override void Draw(CGRect rect)
 		{
-			///if (IsEnabled)
-			{
-				var checkedColor = (CheckBoxTintColor.IsDefault ? base.TintColor : CheckBoxTintColor.ToUIColor());
-				checkedColor.SetFill();
-				checkedColor.SetStroke();
-			}
-			//else
-			//{
-			//	(DisabledColor.IsDefault ? UIColor.Black.ColorWithAlpha(.5f) : DisabledColor.ToUIColor()).SetColor();
-			//}
+			var checkedColor = (CheckBoxTintColor.IsDefault ? base.TintColor : CheckBoxTintColor.ToUIColor());
+			checkedColor.SetFill();
+			checkedColor.SetStroke();
 
 			var width = Bounds.Size.Width;
 			var height = Bounds.Size.Height;
 
-			var outerDiameter = Math.Min (width, height);
-			var lineWidth = 2.0 / CheckBoxRenderer.DefaultSize * outerDiameter;
+			var outerDiameter = Math.Min(width, height);
+			var lineWidth = 2.0 / DefaultSize * outerDiameter;
 			var diameter = outerDiameter - 3 * lineWidth;
 
 			var xOffset = diameter + lineWidth * 2 <= width ? lineWidth * 2 : (width - diameter) / 2;
@@ -96,7 +93,7 @@ namespace Xamarin.Forms.Platform.iOS
 			var vPadding = (nfloat)((height - diameter) / 2);
 
 			var backgroundRect = new CGRect(xOffset, vPadding, diameter, diameter);
-			var boxPath = UIBezierPath.FromOval(backgroundRect);
+			var boxPath = GetCheckBoxPath(backgroundRect);
 			boxPath.LineWidth = (nfloat)lineWidth;
 			boxPath.Stroke();
 			if (IsChecked)
@@ -108,16 +105,16 @@ namespace Xamarin.Forms.Platform.iOS
 					LineCapStyle = CGLineCap.Round,
 					LineJoinStyle = CGLineJoin.Round
 				};
-				var context = UIGraphics.GetCurrentContext ();
-				context.SaveState ();
-				context.TranslateCTM ((nfloat)hPadding + (nfloat)(0.05 * diameter), vPadding + (nfloat)(0.1 * diameter));
-				context.ScaleCTM ((nfloat)diameter, (nfloat)diameter);
+				var context = UIGraphics.GetCurrentContext();
+				context.SaveState();
+				context.TranslateCTM((nfloat)hPadding + (nfloat)(0.05 * diameter), vPadding + (nfloat)(0.1 * diameter));
+				context.ScaleCTM((nfloat)diameter, (nfloat)diameter);
 				checkPath.MoveTo(new CGPoint(0.72f, 0.22f));
 				checkPath.AddLineTo(new CGPoint(0.33f, 0.6f));
 				checkPath.AddLineTo(new CGPoint(0.15f, 0.42f));
 				(CheckColor.IsDefault ? UIColor.White : CheckColor.ToUIColor()).SetStroke();
 				checkPath.Stroke();
-				context.RestoreState ();
+				context.RestoreState();
 			}
 
 		}
