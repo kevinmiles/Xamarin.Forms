@@ -1,6 +1,6 @@
 steps:
     - task: NuGetToolInstaller@0
-      displayName: 'Use NuGet $(nugetVersion)'
+      displayName: 'Use NuGet'
       inputs:
         versionSpec: $(nugetVersion)
 
